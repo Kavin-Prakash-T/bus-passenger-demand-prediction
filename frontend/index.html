@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OptiTransit - Bus Passenger Demand Intelligence</title>
+  <meta name="description" content="Enterprise bus passenger demand prediction and schedule optimization system.">
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <!-- Solid Theme CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-container">
+
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+      <div class="nav-content">
+        <div class="brand-section">
+          <div class="brand-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="16" height="16" x="4" y="3" rx="2"></rect>
+              <path d="M4 11h16"></path>
+              <path d="M8 15h.01"></path>
+              <path d="M16 15h.01"></path>
+              <path d="M6 19v2"></path>
+              <path d="M18 19v2"></path>
+            </svg>
+          </div>
+          <div class="brand-titles">
+            <h1>OptiTransit Console</h1>
+            <span>Metropolitan Transit Authority &bull; Demand &amp; Dispatch Intelligence</span>
+          </div>
+        </div>
+
+        <div class="nav-actions">
+          <div class="enterprise-live-tag">
+            <span class="live-dot"></span>
+            <span>Live Dispatch Telemetry</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs-wrapper">
+      <div class="nav-tabs">
+        <button class="tab-btn active" data-tab="viewPrediction">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 3v18h18"></path>
+            <path d="m19 9-5 5-4-4-3 3"></path>
+          </svg>
+          Single Trip Prediction
+        </button>
+        <button class="tab-btn" data-tab="viewSimulation">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+            <line x1="16" x2="16" y1="2" y2="6"></line>
+            <line x1="8" x2="8" y1="2" y2="6"></line>
+            <line x1="3" x2="21" y1="10" y2="10"></line>
+          </svg>
+          24h Hourly Demand Simulation
+        </button>
+        <button class="tab-btn" data-tab="viewComparison">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="7" height="9" x="3" y="3" rx="1"></rect>
+            <rect width="7" height="5" x="14" y="3" rx="1"></rect>
+            <rect width="7" height="9" x="14" y="12" rx="1"></rect>
+            <rect width="7" height="5" x="3" y="16" rx="1"></rect>
+          </svg>
+          Route Comparison Matrix
+        </button>
+        <button class="tab-btn" data-tab="viewAnalytics">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          Dataset Insights &amp; Analytics
+        </button>
+        <button class="tab-btn" data-tab="viewBenchmarks">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="m9 12 2 2 4-4"></path>
+          </svg>
+          Model Architecture & Benchmark
+        </button>
+      </div>
+    </nav>
+
+    <!-- Main Views Container -->
+    <main class="main-wrapper">
+
+      <!-- ========================================================= -->
+      <!-- VIEW 1: Single Prediction -->
+      <!-- ========================================================= -->
+      <section id="viewPrediction" class="view-section active">
+        
+        <!-- Presets Bar -->
+        <div class="presets-bar">
+          <span class="presets-label">Operational Profiles:</span>
+          <button class="preset-chip" data-route="70" data-hour="8" data-weather="Cloudy" data-bus="Express">
+            Route 70 &bull; Morning Peak (08:00)
+          </button>
+          <button class="preset-chip" data-route="570" data-hour="18" data-weather="Clear" data-bus="Express">
+            Route 570 &bull; Evening Commute (18:00)
+          </button>
+          <button class="preset-chip" data-route="M1" data-hour="14" data-weather="Rain" data-bus="Ordinary">
+            Route M1 &bull; Inclement Weather (14:00)
+          </button>
+          <button class="preset-chip" data-route="101" data-hour="21" data-weather="Clear" data-bus="Deluxe">
+            Route 101 &bull; Late Night Deluxe (21:00)
+          </button>
+        </div>
+
+        <div class="grid-prediction-view">
+          
+          <!-- Input Form Card -->
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 20h9"></path>
+                  <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
+                </svg>
+                Trip Parameters
+              </h2>
+            </div>
+
+            <form id="predictForm">
+              
+              <div class="form-group-row">
+                <div class="form-group">
+                  <label class="form-label" for="routeSelect">Bus Route</label>
+                  <select id="routeSelect" class="form-control">
+                    <option value="70">Route 70</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="dateInput">Trip Date</label>
+                  <input type="date" id="dateInput" class="form-control">
+                </div>
+              </div>
+
+              <!-- Time of Day Slider -->
+              <div class="form-group">
+                <label class="form-label">Operating Hour: <span id="hourDisplay" style="color: var(--accent-primary); font-weight:700;">8:00 AM</span></label>
+                <div class="slider-container">
+                  <span style="font-size:0.75rem; color:var(--text-muted);">5 AM</span>
+                  <input type="range" id="hourSlider" class="range-slider" min="5" max="22" step="1" value="8">
+                  <span style="font-size:0.75rem; color:var(--text-muted);">10 PM</span>
+                </div>
+              </div>
+
+              <!-- Derived Features Ribbon -->
+              <div class="derived-indicators">
+                <div id="derivedDay" class="derived-item"><strong>Day:</strong> Saturday</div>
+                <div id="derivedWeekend" class="derived-item"><strong>Weekend:</strong> Yes</div>
+                <div id="derivedPeak" class="derived-item"><strong>Status:</strong> <span class="badge-tag peak">Peak Hour</span></div>
+                <div id="derivedWeek" class="derived-item"><strong>Week:</strong> #25</div>
+              </div>
+
+              <!-- Weather Selector -->
+              <div class="form-group">
+                <label class="form-label">Weather Condition</label>
+                <div id="weatherSegments" class="segmented-group">
+                  <button type="button" class="segmented-option active" data-val="Clear">Clear</button>
+                  <button type="button" class="segmented-option" data-val="Cloudy">Cloudy</button>
+                  <button type="button" class="segmented-option" data-val="Rain">Rain</button>
+                </div>
+              </div>
+
+              <!-- Bus Type Selector -->
+              <div class="form-group">
+                <label class="form-label">Bus Classification</label>
+                <div id="busTypeSegments" class="segmented-group">
+                  <button type="button" class="segmented-option" data-val="Ordinary">Ordinary</button>
+                  <button type="button" class="segmented-option active" data-val="Express">Express</button>
+                  <button type="button" class="segmented-option" data-val="Deluxe">Deluxe</button>
+                </div>
+              </div>
+
+              <!-- Public Holiday Toggle -->
+              <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label style="display:flex; align-items:center; gap:0.6rem; font-size:0.85rem; cursor:pointer; color:var(--text-secondary);">
+                  <input type="checkbox" id="holidayToggle" style="accent-color: var(--accent-primary); width:16px; height:16px;">
+                  Mark as Public / Regional Holiday
+                </label>
+              </div>
+
+              <button type="submit" id="btnPredict" class="btn-primary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 7-7 7 7"></path>
+                  <path d="M12 19V5"></path>
+                </svg>
+                Generate Passenger Demand Prediction
+              </button>
+            </form>
+          </div>
+
+          <!-- Prediction Result Card -->
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                </svg>
+                Inference & Fleet Dispatch Insights
+              </h2>
+            </div>
+
+            <!-- Empty State -->
+            <div id="predictionEmptyState" class="prediction-empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <p>Configure parameters on the left and click <strong>Generate Prediction</strong> or choose a Quick Scenario preset.</p>
+            </div>
+
+            <!-- Results Content -->
+            <div id="predictionResults" class="prediction-content">
+              
+              <!-- Metric Hero -->
+              <div class="metric-hero">
+                <div>
+                  <div class="metric-hero-label">Estimated Passenger Count</div>
+                  <div id="outPassengerCount" class="metric-hero-value">60</div>
+                  <div class="metric-hero-sub">Standard deviation: ±7.4 passengers</div>
+                </div>
+                <div>
+                  <div id="outDemandBadge" class="demand-badge medium">Medium Demand</div>
+                </div>
+              </div>
+
+              <!-- Recommendation Card -->
+              <div class="recommendation-box">
+                <div class="rec-title">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                  Operational Recommendation
+                </div>
+                <div id="outRecText" class="rec-text">
+                  Standard demand. Maintain regular timetable and standard bus capacity.
+                </div>
+              </div>
+
+              <!-- Bus Capacity Utilization Meter -->
+              <div class="capacity-card">
+                <div class="capacity-header">
+                  <span style="color:var(--text-secondary);">Vehicle Capacity Utilization</span>
+                  <span id="outCapLabel" style="color:var(--text-primary); font-weight:700;">100% (60 / 60 Seats)</span>
+                </div>
+                <div class="progress-track">
+                  <div id="outCapFill" class="progress-fill fill-medium" style="width: 100%;"></div>
+                </div>
+              </div>
+
+              <!-- Key Features Summary Grid -->
+              <div class="feature-details-grid">
+                <div class="feature-kpi">
+                  <div class="feature-kpi-label">Route</div>
+                  <div id="outFeatureRoute" class="feature-kpi-val">Route 70</div>
+                </div>
+                <div class="feature-kpi">
+                  <div class="feature-kpi-label">Time Window</div>
+                  <div id="outFeatureTime" class="feature-kpi-val">8:00 AM</div>
+                </div>
+                <div class="feature-kpi">
+                  <div class="feature-kpi-label">Conditions</div>
+                  <div id="outFeatureWeather" class="feature-kpi-val">Cloudy • Express</div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ========================================================= -->
+      <!-- VIEW 2: 24h Hourly Demand Simulation -->
+      <!-- ========================================================= -->
+      <section id="viewSimulation" class="view-section">
+        <div class="view-header">
+          <h2>Full-Day Hourly Demand Simulation</h2>
+          <p>Analyze passenger volume fluctuations across all operating hours (5:00 AM – 10:00 PM) for optimal dispatch scheduling.</p>
+        </div>
+
+        <!-- Simulation Filter Bar -->
+        <div class="simulation-controls">
+          <div class="form-group" style="margin:0;">
+            <label class="form-label" for="simRoute">Route</label>
+            <select id="simRoute" class="form-control">
+              <option value="70">Route 70</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin:0;">
+            <label class="form-label" for="simDate">Date</label>
+            <input type="date" id="simDate" class="form-control">
+          </div>
+
+          <div class="form-group" style="margin:0;">
+            <label class="form-label" for="simWeather">Weather</label>
+            <select id="simWeather" class="form-control">
+              <option value="Clear">Clear</option>
+              <option value="Cloudy">Cloudy</option>
+              <option value="Rain">Rain</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin:0;">
+            <label class="form-label" for="simBusType">Bus Type</label>
+            <select id="simBusType" class="form-control">
+              <option value="Ordinary">Ordinary</option>
+              <option value="Express" selected>Express</option>
+              <option value="Deluxe">Deluxe</option>
+            </select>
+          </div>
+
+          <button id="btnRunSimulation" class="btn-primary" style="height: 42px; width:auto; padding: 0 1.5rem;">
+            Simulate Full Day
+          </button>
+        </div>
+
+        <!-- Simulation KPIs -->
+        <div class="kpi-row">
+          <div class="kpi-card">
+            <div class="kpi-card-title">Peak Demand Window</div>
+            <div id="simPeakHourVal" class="kpi-card-value">--</div>
+            <div class="kpi-card-footer">Highest volume slot</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-card-title">Estimated Total Passengers</div>
+            <div id="simDailyTotalVal" class="kpi-card-value">--</div>
+            <div class="kpi-card-footer">Sum over 18 operating hours</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-card-title">High Congestion Hours</div>
+            <div id="simHighDemandCount" class="kpi-card-value">--</div>
+            <div class="kpi-card-footer">Demand &gt; 80 passengers</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-card-title">Suggested Peak Fleet</div>
+            <div id="simFleetRecommendation" class="kpi-card-value">--</div>
+            <div class="kpi-card-footer">Calculated fleet allocation</div>
+          </div>
+        </div>
+
+        <!-- Simulation Chart Card -->
+        <div class="chart-card">
+          <div class="card-header">
+            <h3 class="card-title">Hourly Demand Curve & Capacity Thresholds</h3>
+            <div style="display:flex; gap:1rem; font-size:0.75rem;">
+              <span style="display:flex; align-items:center; gap:0.35rem; color:var(--text-secondary);">
+                <span style="width:10px; height:10px; background-color:#059669; border-radius:2px;"></span> Low (&le;40)
+              </span>
+              <span style="display:flex; align-items:center; gap:0.35rem; color:var(--text-secondary);">
+                <span style="width:10px; height:10px; background-color:#d97706; border-radius:2px;"></span> Medium (41-80)
+              </span>
+              <span style="display:flex; align-items:center; gap:0.35rem; color:var(--text-secondary);">
+                <span style="width:10px; height:10px; background-color:#dc2626; border-radius:2px;"></span> High (&gt;80)
+              </span>
+            </div>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="simulationChartCanvas"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================= -->
+      <!-- VIEW 3: Route Comparison Matrix -->
+      <!-- ========================================================= -->
+      <section id="viewComparison" class="view-section">
+        <div class="view-header">
+          <h2>Multi-Route Demand Comparison</h2>
+          <p>Compare passenger demand curves across high-density arterial routes to balance city-wide transit loads.</p>
+        </div>
+
+        <div class="simulation-controls" style="grid-template-columns: 1fr auto;">
+          <div class="form-group" style="margin:0;">
+            <label class="form-label" for="compDate">Select Simulation Date</label>
+            <input type="date" id="compDate" class="form-control">
+          </div>
+          <button id="btnRunComparison" class="btn-primary" style="height: 42px; width:auto; padding: 0 1.5rem;">
+            Compare Routes
+          </button>
+        </div>
+
+        <div class="chart-card">
+          <div class="card-header">
+            <h3 class="card-title">Corridor Load Trajectories (Routes 70, 570, M1, 101, 27B)</h3>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="comparisonChartCanvas"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================= -->
+      <!-- VIEW 4: Model Benchmarks & Metrics -->
+      <!-- ========================================================= -->
+      <section id="viewBenchmarks" class="view-section">
+        <div class="view-header">
+          <h2>Machine Learning Model Architecture & Performance</h2>
+          <p>Empirical evaluation benchmarks comparing candidate regression architectures tested against held-out validation sets.</p>
+        </div>
+
+        <div class="card" style="margin-bottom: 1.5rem;">
+          <div class="card-header">
+            <h3 class="card-title">Production Model Architecture: <span id="selectedModelTitle" style="color:var(--accent-primary); margin-left:0.5rem;">Linear Regression Pipeline</span></h3>
+          </div>
+
+          <div class="benchmark-table-wrapper">
+            <table class="benchmark-table">
+              <thead>
+                <tr>
+                  <th>Algorithm</th>
+                  <th>R² Score (Accuracy)</th>
+                  <th>MAE (Mean Abs Error)</th>
+                  <th>RMSE (Root Mean Sq Error)</th>
+                  <th>Production Status</th>
+                </tr>
+              </thead>
+              <tbody id="benchmarkTableBody">
+                <!-- Dynamically populated from /api/model-info -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Operational Demand Classification Rules</h3>
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:1rem;">
+            <div style="background-color:var(--bg-surface-elevated); padding:1rem; border-radius:var(--radius-md); border-left:4px solid var(--status-success);">
+              <h4 style="color:var(--status-success-text); font-size:0.95rem; margin-bottom:0.25rem;">Low Demand (&le; 40 Passengers)</h4>
+              <p style="font-size:0.8rem; color:var(--text-secondary);">Optimal for compact or standard bus running standard headways (15-20 min intervals).</p>
+            </div>
+            <div style="background-color:var(--bg-surface-elevated); padding:1rem; border-radius:var(--radius-md); border-left:4px solid var(--status-warning);">
+              <h4 style="color:var(--status-warning-text); font-size:0.95rem; margin-bottom:0.25rem;">Medium Demand (41 - 80 Passengers)</h4>
+              <p style="font-size:0.8rem; color:var(--text-secondary);">Standard bus operating regular schedule (8-12 min intervals).</p>
+            </div>
+            <div style="background-color:var(--bg-surface-elevated); padding:1rem; border-radius:var(--radius-md); border-left:4px solid var(--status-danger);">
+              <h4 style="color:var(--status-danger-text); font-size:0.95rem; margin-bottom:0.25rem;">High Demand (&gt; 80 Passengers)</h4>
+              <p style="font-size:0.8rem; color:var(--text-secondary);">Deploy high-capacity/articulated buses or reduce headways (5-8 min express dispatch).</p>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ========================================================= -->
+      <!-- VIEW 5: Dataset Analytics & Distribution Charts -->
+      <!-- ========================================================= -->
+      <section id="viewAnalytics" class="view-section">
+        <div class="view-header">
+          <h2>Dataset Analytics &amp; Demand Distributions</h2>
+          <p>Key feature distributions and historical passenger demand aggregations across operational dimensions.</p>
+        </div>
+
+        <div class="analytics-grid">
+          
+          <!-- Chart 1: Weather Distribution -->
+          <div class="small-chart-card">
+            <div class="small-chart-header">
+              <div class="small-chart-title">Weather Distribution</div>
+              <div class="small-chart-sub">Share of trips by weather category</div>
+            </div>
+            <div class="small-chart-wrapper">
+              <canvas id="chartWeather"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 2: Bus Type Distribution -->
+          <div class="small-chart-card">
+            <div class="small-chart-header">
+              <div class="small-chart-title">Bus Type Distribution</div>
+              <div class="small-chart-sub">Fleet composition (Ordinary, Express, Deluxe)</div>
+            </div>
+            <div class="small-chart-wrapper">
+              <canvas id="chartBusType"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 3: Distribution of Passenger Demand -->
+          <div class="small-chart-card">
+            <div class="small-chart-header">
+              <div class="small-chart-title">Distribution of Passenger Demand</div>
+              <div class="small-chart-sub">Trips classified into Low, Medium, High</div>
+            </div>
+            <div class="small-chart-wrapper">
+              <canvas id="chartDemandLevel"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 4: Average Passenger Demand by Route -->
+          <div class="small-chart-card">
+            <div class="small-chart-header">
+              <div class="small-chart-title">Average Demand by Route</div>
+              <div class="small-chart-sub">Mean passenger load across 10 corridors</div>
+            </div>
+            <div class="small-chart-wrapper">
+              <canvas id="chartAvgRoute"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 5: Average Passenger Demand by Hour -->
+          <div class="small-chart-card">
+            <div class="small-chart-header">
+              <div class="small-chart-title">Average Demand by Hour</div>
+              <div class="small-chart-sub">Hourly load profile (Peak hours in Red)</div>
+            </div>
+            <div class="small-chart-wrapper">
+              <canvas id="chartAvgHour"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 6: Weekday vs Weekend Passenger Demand -->
+          <div class="small-chart-card">
+            <div class="small-chart-header">
+              <div class="small-chart-title">Weekday vs Weekend Demand</div>
+              <div class="small-chart-sub">Average passenger volume comparison</div>
+            </div>
+            <div class="small-chart-wrapper">
+              <canvas id="chartWeekdayWeekend"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 7: Passenger Demand by Bus Type -->
+          <div class="small-chart-card">
+            <div class="small-chart-header">
+              <div class="small-chart-title">Demand by Bus Type</div>
+              <div class="small-chart-sub">Mean passengers per vehicle tier</div>
+            </div>
+            <div class="small-chart-wrapper">
+              <canvas id="chartDemandBusType"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 8: Holiday vs Non-Holiday Demand -->
+          <div class="small-chart-card">
+            <div class="small-chart-header">
+              <div class="small-chart-title">Holiday vs Non-Holiday Demand</div>
+              <div class="small-chart-sub">Regular working days vs declared holidays</div>
+            </div>
+            <div class="small-chart-wrapper">
+              <canvas id="chartHoliday"></canvas>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+
+  </div>
+
+  <!-- Application Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
