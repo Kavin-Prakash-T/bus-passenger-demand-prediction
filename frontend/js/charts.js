@@ -87,23 +87,23 @@ class ChartManager {
         scales: {
           x: {
             grid: { color: gridColor, drawBorder: false },
-            ticks: { color: textColor, font: { family: "Plus Jakarta Sans", size: 11 } },
+            ticks: { color: textColor, font: { family: "Poppins", size: 11 } },
             title: {
               display: true,
               text: "Time of Day",
               color: "#0f172a",
-              font: { family: "Plus Jakarta Sans", size: 12, weight: 700 }
+              font: { family: "Poppins", size: 12, weight: 700 }
             }
           },
           y: {
             beginAtZero: true,
             grid: { color: gridColor, drawBorder: false },
-            ticks: { color: textColor, font: { family: "Plus Jakarta Sans", size: 11 } },
+            ticks: { color: textColor, font: { family: "Poppins", size: 11 } },
             title: {
               display: true,
               text: "Predicted Passengers",
               color: "#0f172a",
-              font: { family: "Plus Jakarta Sans", size: 12, weight: 700 }
+              font: { family: "Poppins", size: 12, weight: 700 }
             }
           }
         }
@@ -151,7 +151,7 @@ class ChartManager {
             position: "top",
             labels: {
               color: textColor,
-              font: { family: "Plus Jakarta Sans", size: 12, weight: 600 },
+              font: { family: "Poppins", size: 12, weight: 600 },
               usePointStyle: true,
               boxWidth: 8
             }
@@ -173,7 +173,7 @@ class ChartManager {
               display: true,
               text: "Time of Day",
               color: "#0f172a",
-              font: { family: "Plus Jakarta Sans", size: 12, weight: 700 }
+              font: { family: "Poppins", size: 12, weight: 700 }
             }
           },
           y: {
@@ -184,7 +184,7 @@ class ChartManager {
               display: true,
               text: "Predicted Passengers",
               color: "#0f172a",
-              font: { family: "Plus Jakarta Sans", size: 12, weight: 700 }
+              font: { family: "Poppins", size: 12, weight: 700 }
             }
           }
         }
@@ -192,9 +192,7 @@ class ChartManager {
     });
   }
 
-  // -------------------------------------------------------------
-  // 3. Analytics Small-Size Charts Dashboard (All 8 charts with explicit X/Y labels)
-  // -------------------------------------------------------------
+ 
   destroyAnalyticsChart(key) {
     if (this.analyticsCharts[key]) {
       this.analyticsCharts[key].destroy();
@@ -206,8 +204,8 @@ class ChartManager {
     const gridColor = "#f1f5f9";
     const textColor = "#475569";
     const axisTitleColor = "#0f172a";
-    const tickFont = { family: "Plus Jakarta Sans", size: 9 };
-    const axisTitleFont = { family: "Plus Jakarta Sans", size: 10, weight: 700 };
+    const tickFont = { family: "Poppins", size: 9 };
+    const axisTitleFont = { family: "Poppins", size: 10, weight: 700 };
 
     const tooltipConfig = {
       backgroundColor: "#ffffff",
