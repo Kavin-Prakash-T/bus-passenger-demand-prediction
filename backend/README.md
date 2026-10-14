@@ -1,4 +1,4 @@
-# Bus Passenger Demand Prediction - Backend API
+# BusCast - Bus Passenger Demand Prediction Backend API
 
 A modular, production-ready Flask backend designed for serving predictions and analytics from the trained Bus Passenger Demand machine learning model.
 

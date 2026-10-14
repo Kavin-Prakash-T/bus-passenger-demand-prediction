@@ -1,4 +1,4 @@
-# 🚌 Bus Passenger Demand Prediction & Fleet Optimization
+# 🚌 BusCast - Bus Passenger Demand Prediction & Fleet Optimization
 
 An intelligent transit demand forecasting and schedule optimization system powered by Machine Learning. This project predicts passenger volumes across major urban bus routes and assists transit authorities in dynamic dispatching, headway management, and fleet allocation.
 

@@ -1,5 +1,5 @@
 /**
- * OptiTransit UI Application Logic
+ * BusCast UI Application Logic
  * Orchestrates views, presets, single prediction, simulation, comparison, and benchmarks.
  */
 

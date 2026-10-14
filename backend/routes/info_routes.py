@@ -21,7 +21,7 @@ def home():
         return send_from_directory(frontend_dir, "index.html")
 
     return jsonify({
-        "project": "Bus Passenger Demand Prediction API",
+        "project": "BusCast - Bus Passenger Demand Prediction API",
         "status": "online",
         "model_loaded": model_service.is_loaded,
         "endpoints": {

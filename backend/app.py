@@ -19,5 +19,5 @@ if __name__ == "__main__":
     port = app.config.get("PORT", 5000)
     debug = app.config.get("DEBUG", True)
 
-    print(f" Starting Bus Passenger Demand Prediction Server on http://{host}:{port}")
+    print(f" Starting BusCast Server on http://{host}:{port}")
     app.run(host=host, port=port, debug=debug)

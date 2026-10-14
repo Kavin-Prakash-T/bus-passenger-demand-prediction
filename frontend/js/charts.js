@@ -9,6 +9,10 @@ class ChartManager {
     this.simulationChart = null;
     this.comparisonChart = null;
     this.analyticsCharts = {};
+
+    if (typeof Chart !== "undefined") {
+      Chart.defaults.font.family = "'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+    }
   }
 
   // -------------------------------------------------------------
