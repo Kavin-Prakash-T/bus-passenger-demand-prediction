@@ -17,7 +17,7 @@ from services.model_service import model_service
 from services.metrics_service import metrics_service
 
 
-def create_app(config_setting=None) -> Flask:
+def create_app(config_setting=None) -> Flask:   
     """
     Constructs and configures the Flask application.
     
